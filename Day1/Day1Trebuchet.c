@@ -12,8 +12,6 @@ int main(int argc, char *argv[]) {
 
   char *filename = argv[1];
 
-
-
   FILE *file = fopen(filename, "r");
   char line[MAX_LINE_LENGTH];
 
@@ -54,12 +52,11 @@ int main(int argc, char *argv[]) {
     total += totalThisLine;
 
     printf("Head: %d, Tail: %d, Total: %d\n", head, tail, totalThisLine);
-
   }
 
   fclose(file);
 
-    printf("Total: %d\n", total);
+  printf("Total: %d\n", total);
 
   return 0;
 }
