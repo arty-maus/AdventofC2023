@@ -6,6 +6,7 @@
 #define NUM_WORDS 9
 
 void replaceNumberWords(char *input, const char *number_words[], const char *digits[]);
+void removeNonDigits(char *str);
 
 int main(int argc, char *argv[]) {
     const char *number_words[NUM_WORDS] = {"one", "two", "three", "four", "five",
@@ -32,21 +33,9 @@ int main(int argc, char *argv[]) {
         char *input = line;
         int input_len = strlen(input);
 
-        // Find occurrences of number words and replace
+        printf("Input: %s \n", input);
+
         replaceNumberWords(input, number_words, digits);
-
-        // Check if line contains any numbers
-        int contains_numbers = 0;
-        for (int i = 0; i < input_len; i++) {
-            if (isdigit(input[i])) {
-                contains_numbers = 1;
-                break;
-            }
-        }
-
-        if (!contains_numbers) {
-            continue; // No numbers found, skip line
-        }
 
         int head_index = 0;
         int tail_index = input_len - 1;
@@ -65,6 +54,8 @@ int main(int argc, char *argv[]) {
         int head = input[head_index] - '0';
         int tail = input[tail_index] - '0';
         int totalThisLine = (head * 10) + tail;
+
+        printf("Total this line: %d\n", totalThisLine);
 
         total += totalThisLine;
     }
@@ -86,25 +77,47 @@ void replaceNumberWords(char *input, const char *number_words[], const char *dig
         for (int j = 0; j < NUM_WORDS; j++) {
             const char *word = number_words[j];
             int word_len = strlen(word);
+
+            
+
             if (strncmp(&input[i], word, word_len) == 0) {
                 indices[count][0] = i;
                 indices[count][1] = j;
                 count++;
-                i += word_len - 1; // Move i to the end of the word
                 break;
             }
         }
     }
 
-    // Replace number words with digits
+    //Print index and digit
+    for (int i = 0; i < count; i++) {
+        printf("Index: %d, Digit: %d\n", indices[i][0], indices[i][1]);
+    }
+
     for (int i = count - 1; i >= 0; i--) {
         int index = indices[i][0];
         int digit = indices[i][1];
         const char *replacement = digits[digit];
-        int replacement_len = strlen(replacement);
-        int word_len = strlen(number_words[digit]);
-
-        memmove(&input[index + replacement_len], &input[index + word_len], strlen(&input[index + word_len]) + 1);
-        memcpy(&input[index], replacement, replacement_len);
+        input[index] = replacement[0];
     }
+
+    printf("Replaced: %s \n", input);
+
+    removeNonDigits(input);
+
+    printf("Removed non-digits: %s \n", input);
+    
+}
+
+void removeNonDigits(char *str) {
+    char *p = str;
+
+    while (*str) {
+        if (isdigit(*str)) {
+            *p++ = *str;
+        }
+        str++; 
+    }
+    
+    *p = '\0';
 }
